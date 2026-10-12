@@ -1,0 +1,103 @@
+<%- include('partials/header') %>
+
+<% const moneda = (n) => '$' + Number(n).toLocaleString('es-EC', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); %>
+
+<section class="card">
+  <h2>Filtros</h2>
+  <form method="get" action="/comisiones" class="filtros">
+    <label>
+      Desde
+      <input type="date" name="desde" value="<%= filtros.desde %>" required>
+    </label>
+    <label>
+      Hasta
+      <input type="date" name="hasta" value="<%= filtros.hasta %>" required>
+    </label>
+    <label>
+      Vendedor
+      <select name="vendedorId">
+        <option value="">Todos</option>
+        <% vendedores.forEach((v) => { %>
+          <option value="<%= v.id %>" <%= filtros.vendedorId === v.id ? 'selected' : '' %>><%= v.nombre %></option>
+        <% }) %>
+      </select>
+    </label>
+    <button type="submit">Calcular</button>
+  </form>
+
+  <% if (errores.length) { %>
+    <ul class="errores">
+      <% errores.forEach((e) => { %><li><%= e %></li><% }) %>
+    </ul>
+  <% } %>
+</section>
+
+<% if (resultado) { %>
+  <section class="resumen">
+    <div class="kpi"><span>Total ventas</span><strong><%= moneda(resultado.resumen.totalVentas) %></strong></div>
+    <div class="kpi"><span>Total comisiones</span><strong><%= moneda(resultado.resumen.totalComisiones) %></strong></div>
+    <div class="kpi"><span>Vendedores</span><strong><%= resultado.resumen.cantidadVendedores %></strong></div>
+    <div class="kpi"><span>Ventas</span><strong><%= resultado.resumen.cantidadVentas %></strong></div>
+  </section>
+
+  <section class="card">
+    <h2>Comisión por vendedor</h2>
+    <% if (resultado.vendedores.length === 0) { %>
+      <p class="vacio">No hay ventas en el rango seleccionado.</p>
+    <% } else { %>
+      <div class="tabla-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Vendedor</th>
+              <th class="num">Ventas</th>
+              <th class="num">Total vendido</th>
+              <th>Regla aplicada</th>
+              <th class="num">%</th>
+              <th class="num">Comisión</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% resultado.vendedores.forEach((v) => { %>
+              <tr>
+                <td><strong><%= v.nombre %></strong></td>
+                <td class="num"><%= v.cantidadVentas %></td>
+                <td class="num"><%= moneda(v.totalVentas) %></td>
+                <td><%= v.regla %></td>
+                <td class="num"><%= v.porcentaje %>%</td>
+                <td class="num"><strong><%= moneda(v.comision) %></strong></td>
+              </tr>
+              <tr class="detalle">
+                <td colspan="6">
+                  <details>
+                    <summary>Ver ventas de <%= v.nombre %></summary>
+                    <ul>
+                      <% v.ventas.forEach((venta) => { %>
+                        <li><%= venta.fecha %> · <%= venta.cliente %> · <%= moneda(venta.monto) %></li>
+                      <% }) %>
+                    </ul>
+                  </details>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+<% } %>
+
+<section class="card">
+  <h2>Reglas de comisión</h2>
+  <p class="nota">El porcentaje se aplica sobre el total vendido en el período.</p>
+  <table>
+    <thead><tr><th>Rango de ventas</th><th class="num">Porcentaje</th><th>Nombre</th></tr></thead>
+    <tbody>
+      <% reglas.forEach((r) => { %>
+        <tr><td><%= r.rango %></td><td class="num"><%= r.porcentaje %>%</td><td><%= r.nombre %></td></tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>
+
+<%- include('partials/footer') %>

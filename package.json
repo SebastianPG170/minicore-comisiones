@@ -1,0 +1,19 @@
+{
+  "name": "minicore-comisiones",
+  "version": "1.0.0",
+  "description": "Minicore: cálculo de comisiones de ventas por rango de fechas (Node.js + Express, patrón MVC)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0"
+  }
+}
