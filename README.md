@@ -71,9 +71,9 @@ Requiere Node 18 o superior. Copia `.env.example` a `.env` si quieres cambiar el
 
 ## Enlaces de entrega
 
-- Repositorio GitHub: _pendiente_
-- Video explicativo: _pendiente_
-- Deploy en Render: _pendiente_
+- Repositorio GitHub: https://github.com/SebastianPG170/minicore-comisiones
+- Video explicativo: https://youtu.be/_tRBAuFCbYY
+- Deploy en Render: https://minicore-comisiones-whnf.onrender.com
 
 ## Referencias
 
